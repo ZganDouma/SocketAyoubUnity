@@ -56,7 +56,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom == null)
             return;
 
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= 1 && PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 2 && PhotonNetwork.IsMasterClient)
         {
             numberPlayer.text = "Number of players = " + PhotonNetwork.CurrentRoom.PlayerCount + " You can Start the game now";
             StartGameButton.interactable = true;

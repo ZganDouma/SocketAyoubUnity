@@ -15,7 +15,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] private int maxMsg = 8;
     [SerializeField] private TextMeshProUGUI messagesText;
     [SerializeField] private TMP_InputField inputMessage;
-    private static ChatManager instance;
+    public static ChatManager instance;
     private void Awake()
     {
         if (instance == null)
@@ -90,6 +90,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     }
 
     #endregion EventChat
+    #region photonChat
     private void ConnectToChatServer()
     {
         string username = PhotonNetwork.NickName;
@@ -107,10 +108,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         {
             DateTime dateTime = DateTime.Now;
             string time = dateTime.Hour + ":" + dateTime.Minute + ":" + dateTime.Second;
-            string header = "<color=balck>{" + time + "} " + "[" + senders[i] + "]</color>";
+            string header = "<color=black>{" + time + "} " + "[" + senders[i] + "]</color>";
             if (senders[i] == PhotonNetwork.NickName)
                 header = "<color=green>{" + time + "} " + "[" + senders[i] + "]</color>";
             msgs = string.Format("{0}{1}={2} ", msgs, header, messages[i]);
+            msgs += "[photon]";
         }
         //when we list of messages is too big we remove the first one
         if (listmessages.Count > maxMsg)
@@ -141,4 +143,37 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             inputMessage.text = "";
         }
     }
+    #endregion
+    #region SocketNetChat
+  public void   SendMessageToAllSocket()
+    {
+        if (inputMessage.text != "")
+        {
+            ClientSendData.instance.SendMessageChat(inputMessage.text);
+            inputMessage.text = "";
+        }
+    }
+    public void GetMessagesSocket(string sender, string msg)
+    {
+        //When we recive a message we added to list of msgs so we can show later
+        string msgs = "";
+        
+            DateTime dateTime = DateTime.Now;
+            string time = dateTime.Hour + ":" + dateTime.Minute + ":" + dateTime.Second;
+            string header = "<color=black>{" + time + "} " + "[" + sender + "]</color>";
+            if (sender == PhotonNetwork.NickName)
+                header = "<color=green>{" + time + "} " + "[" + sender + "]</color>";
+            msgs = string.Format("{0}{1}={2} ", msgs, header, msg);
+            msgs += "[Socket Net]";
+        
+        //when we list of messages is too big we remove the first one
+        if (listmessages.Count > maxMsg)
+            listmessages.RemoveAt(0);
+
+        listmessages.Add(msgs);
+        ShowMsgUI();
+    }
+    #endregion
+
+
 }

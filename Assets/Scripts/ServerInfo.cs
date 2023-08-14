@@ -18,15 +18,16 @@ public class ServerInfo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PhotonNetwork.IsConnected)
-        {
-            TextInfo.text = "Not Connected To Master";
+        if (SocketClientCore._clientSocket == null)
             return;
-        }
-        //tring looby = PhotonNetwork.CurrentLobby == null ? "Connecting To the lobby" : PhotonNetwork.CurrentLobby.Name;
-        string room = PhotonNetwork.CurrentRoom == null ? "Connecting To the room \"" : PhotonNetwork.CurrentRoom.Name;
 
-        TextInfo.text = "Connected To Master " +  room;
+        TextInfo.text = SocketClientCore._clientSocket.Connected ? "Connected to Socket Core Server" : " Not connected To Socket Core";
+
+
+        //tring looby = PhotonNetwork.CurrentLobby == null ? "Connecting To the lobby" : PhotonNetwork.CurrentLobby.Name;
+        //string room = PhotonNetwork.CurrentRoom == null ? "Connecting To the room \"" : PhotonNetwork.CurrentRoom.Name;
+
+      //  TextInfo.text = "Connected To Master " +  room;
 
 
     }
